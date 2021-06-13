@@ -1,3 +1,17 @@
+# Initial Setup
+# pip install Flask-PyMongo
+import time
+from selenium import webdriver
+driver = webdriver.Chrome()  # Optional argument, if not specified will search path.
+driver.get('http://www.google.com/');
+time.sleep(5) # Let the user actually see something!
+search_box = driver.find_element_by_name('q')
+search_box.send_keys('ChromeDriver')
+search_box.submit()
+time.sleep(5) # Let the user actually see something!
+driver.quit()
+
+
 # Import dependencies
 from splinter import Browser
 from bs4 import BeautifulSoup as bs
@@ -10,11 +24,11 @@ from flask_pymongo import PyMongo
 
 def init_browser():
     executable_path = {'executable_path': 'chromedriver.exe'}
-    browser = Browser('chrome', **executable_path, headless=False)
+    return Browser('chrome', **executable_path, headless=False)
 
 def scrape():
-    browser=init_browser()
-    mars_dict={}
+    browser = init_browser()
+    mars_dict = {}
 
     # ### NASA Mars News (https://redplanetscience.com/)
     # URL for NASA news page to be scraped
@@ -50,16 +64,13 @@ def scrape():
     # ### Mars Facts (https://galaxyfacts-mars.com/)
     #URL for Mars Facts Website
     facts_url = 'https://galaxyfacts-mars.com/'
-    # Use pandas to read table of facts comparing Mars and Earth
-    facts_table = pd.read_html(facts_url, header=0)
-    facts_table[0]
     # Use pandas to read table of Mars facts
     facts_table = pd.read_html(facts_url)
     facts_df = facts_table[1]
     facts_df.columns =['Description', 'Value']
     facts_df
     # Convert to HTML
-    facts_html = facts_df.to_html()
+    facts_html = facts_df.to_html( index=False)
     print(facts_html)
 
 
